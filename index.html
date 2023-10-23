@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="./app.css" />
     <link rel="icon" type="image/jpg" href="./assets/logo.jpg">
     <meta name="google-site-verification" content="iNzSj2wvdEOVu1PtrK5FfEiu_teOG2LQn5i3kg-xozQ" />
+    <script src="http://localhost:3000/socket.io/socket.io.js"></script>
   </head>
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3775445581945009"
      crossorigin="anonymous"></script>
@@ -16,8 +17,39 @@
       <div id="home" class="flex-center flex-column">
         <h1>The Quizzify Game</h1>
         <a class="btn" href="./game.html">Play</a>
+        <a class="btn" href="javascript:createRoom();">Create a Room</a>
+        <a class="btn" href="javascript:joinRoom();">Join a Room</a>
         <a class="btn" href="./highscores.html">High Scores</a>
       </div>
     </div>
+    <script>
+      const socket = io.connect('http://localhost:3000');
+  
+      socket.on('room-created', (roomName) => {
+          console.log(`Room ${roomName} created!`);
+      });
+  
+      socket.on('joined-room', (roomName) => {
+          console.log(`Joined room ${roomName}!`);
+      });
+  
+      socket.on('error', (errorMessage) => {
+          console.error(errorMessage);
+      });
+  
+      function createRoom() {
+          const roomName = prompt("Enter room name:");
+          if (roomName) {
+              socket.emit('create-room', roomName);
+          }
+      }
+  
+      function joinRoom() {
+          const roomName = prompt("Enter room name:");
+          if (roomName) {
+              socket.emit('join-room', roomName);
+          }
+      }
+  </script>  
   </body>
 </html>
